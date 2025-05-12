@@ -1,0 +1,44 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# API端点
+
+## ZIP文件分析API
+
+- 接收上传的ZIP文件
+- 解压缩并分析内容
+- 识别其中包含的API类型
+- 返回详细分析结果
+
+## GitHub仓库分析API
+
+- 接收GitHub仓库URL
+- 克隆/下载仓库内容
+- 分析代码库中的API定义
+- 返回详细分析结果
+
+## API类型
+
+系统支持检测以下类型的API：
+
+1. **REST API**
+   - 识别控制器、路由定义
+   - 提取端点路径、HTTP方法
+
+2. **WebSocket API**
+   - 识别WebSocket服务器定义
+   - 提取消息处理逻辑
+
+3. **gRPC API**
+   - 识别protobuf定义
+   - 提取服务方法和消息类型
+
+4. **GraphQL API**
+   - 识别schema定义
+   - 提取类型、查询和变更
+
+5. **OpenAPI/Swagger**
+   - 解析OpenAPI规范文档
+   - 提取API结构信息

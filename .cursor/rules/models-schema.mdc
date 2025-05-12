@@ -1,0 +1,86 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# 数据模型和架构
+
+## 核心数据模型
+
+### API模型
+
+```python
+class APIBase:
+    """API基础模型"""
+    id: str
+    name: str
+    description: str
+    type: APIType  # REST | WebSocket | gRPC | GraphQL | OpenAPI
+    detected_at: datetime
+```
+
+### REST API模型
+
+```python
+class RESTEndpoint:
+    """REST API端点模型"""
+    path: str
+    method: HttpMethod  # GET | POST | PUT | DELETE...
+    parameters: List[Parameter]
+    responses: Dict[int, Response]  # 状态码 -> 响应定义
+```
+
+### WebSocket API模型
+
+```python
+class WebSocketAPI:
+    """WebSocket API模型"""
+    endpoint: str
+    messages: List[MessageSchema]
+    events: List[str]
+```
+
+### gRPC API模型
+
+```python
+class GRPCService:
+    """gRPC服务模型"""
+    service_name: str
+    methods: List[GRPCMethod]
+    message_types: List[MessageType]
+```
+
+### GraphQL API模型
+
+```python
+class GraphQLAPI:
+    """GraphQL API模型"""
+    types: List[GraphQLType]
+    queries: List[GraphQLQuery]
+    mutations: List[GraphQLMutation]
+    subscriptions: List[GraphQLSubscription]
+```
+
+### OpenAPI模型
+
+```python
+class OpenAPISpec:
+    """OpenAPI规范模型"""
+    version: str
+    info: Dict
+    paths: Dict[str, PathItem]
+    components: Dict
+```
+
+## 分析结果模型
+
+```python
+class AnalysisResult:
+    """API分析结果模型"""
+    project_name: str
+    source: str  # 'zip' | 'github'
+    source_info: Dict
+    apis: List[APIBase]
+    stats: Dict  # 统计信息
+    errors: List[Dict]  # 分析过程中的错误
+```

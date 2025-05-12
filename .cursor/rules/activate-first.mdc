@@ -1,0 +1,37 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# ⚠️ 必须先激活环境 ⚠️
+
+## 执行任何Python命令前：
+
+```bash
+conda activate api-detector
+```
+
+**重要提示**：
+- 所有Python脚本和命令需要在`api-detector`环境中运行
+- 如果看到模块导入错误，首先检查是否已激活环境
+- IDE和命令行操作都需要先激活环境
+
+## 检查当前环境
+
+可以使用以下命令验证当前激活的环境：
+
+```bash
+# 应显示 api-detector
+conda info --envs | grep "*"
+
+# 或使用项目提供的检查脚本
+python scripts/check_env.py
+```
+
+## 在新终端窗口工作
+
+每次打开新的终端窗口或会话时，都需要重新激活环境：
+
+```bash
+conda activate api-detector
+```

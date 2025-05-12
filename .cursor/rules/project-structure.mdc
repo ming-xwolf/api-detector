@@ -1,0 +1,24 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# API检测器项目结构
+
+这是一个Python RestFul API项目，用于检测和识别不同类型的API。
+
+## 主要功能
+
+- 支持通过上传ZIP文件进行API检测
+- 支持通过GitHub仓库URL进行API检测
+- 支持多种API类型：REST、WebSocket、gRPC、GraphQL和OpenAPI
+
+## 目录结构
+
+- `app/`: 主应用程序代码
+  - `api/`: API路由和端点定义
+  - `core/`: 核心业务逻辑
+  - `models/`: 数据模型定义
+  - `services/`: 服务层，处理具体业务功能
+  - `utils/`: 工具函数和辅助模块
+- `tests/`: 测试代码
