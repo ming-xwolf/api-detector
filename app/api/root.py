@@ -21,4 +21,15 @@ def read_root():
         "status": "运行中",
         "version": settings.APP_VERSION,
         "environment": settings.APP_ENV
+    }
+
+
+@router.get("/health")
+def health_check():
+    """健康检查端点"""
+    logger.debug("健康检查")
+    return {
+        "status": "healthy",
+        "service": settings.APP_NAME,
+        "version": settings.APP_VERSION
     } 
