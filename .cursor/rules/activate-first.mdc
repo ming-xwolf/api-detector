@@ -21,11 +21,7 @@ conda activate api-detector
 可以使用以下命令验证当前激活的环境：
 
 ```bash
-# 应显示 api-detector
-conda info --envs | grep "*"
-
-# 或使用项目提供的检查脚本
-python scripts/check_env.py
+conda activate api-detector
 ```
 
 ## 在新终端窗口工作

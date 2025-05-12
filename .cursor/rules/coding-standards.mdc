@@ -1,6 +1,6 @@
 ---
-description:
-globs:
+description: 
+globs: *.py
 alwaysApply: false
 ---
 # 编码标准
@@ -12,6 +12,7 @@ alwaysApply: false
 - 每行最大长度为88个字符（Black格式化标准）
 - 使用类型注解提高代码可读性
 - 使用docstring为函数和类添加文档
+- 每个文件行数不要超过 500
 
 ## 命名约定
 
