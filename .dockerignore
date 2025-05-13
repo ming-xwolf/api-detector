@@ -1,0 +1,64 @@
+# Git相关
+.git
+.gitignore
+
+# Python缓存文件
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 测试文件
+.pytest_cache/
+tests/
+
+# 本地数据（将通过卷挂载）
+data/uploads/*
+data/temp/*
+data/results/*
+logs/*
+
+# 环境和配置文件
+.env
+.venv
+env/
+venv/
+ENV/
+.cursor/
+.coverage
+
+# Conda相关
+environment.yml
+conda-meta/
+conda-bld/
+conda-env/
+
+# 临时文件
+.temp/
+.tmp/
+
+# 编辑器相关
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker相关
+docker-compose.override.yml
+
+# 其他
+.DS_Store 

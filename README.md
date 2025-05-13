@@ -23,9 +23,9 @@
 ### 前提条件
 
 - Python 3.10+
-- Conda（推荐使用Anaconda或Miniconda）
+- 或者 Docker 和 Docker Compose（无需安装Python）
 
-### 依赖安装
+### 方法一：使用Docker（推荐）
 
 1. 克隆仓库：
    ```bash
@@ -33,15 +33,78 @@
    cd api-detector
    ```
 
-2. 创建并激活conda环境：
+2. 使用Docker Compose启动应用：
    ```bash
-   conda env create -f environment.yml
-   conda activate api-detector
+   docker-compose up -d
+   ```
+   
+   或使用管理脚本：
+   ```bash
+   ./scripts/docker-manage.sh start
    ```
 
-3. 安装额外依赖（如果需要使用.env配置）：
+3. 在浏览器中访问：`http://localhost:8000`
+
+4. 停止服务：
    ```bash
-   pip install python-dotenv pydantic-settings
+   docker-compose down
+   ```
+   
+   或使用管理脚本：
+   ```bash
+   ./scripts/docker-manage.sh stop
+   ```
+
+### 方法二：使用Python虚拟环境
+
+1. 克隆仓库：
+   ```bash
+   git clone <repository-url>
+   cd api-detector
+   ```
+
+2. 使用设置脚本：
+
+   **Linux/MacOS：**
+   ```bash
+   ./scripts/setup.sh setup
+   ```
+
+   **Windows：**
+   ```batch
+   scripts\setup.bat setup
+   ```
+
+   脚本会自动为你创建虚拟环境、安装依赖并创建必要的目录。
+
+3. 运行应用：
+
+   **Linux/MacOS：**
+   ```bash
+   ./scripts/setup.sh run
+   ```
+
+   **Windows：**
+   ```batch
+   scripts\setup.bat run
+   ```
+
+4. 其他可用的命令：
+
+   **Linux/MacOS：**
+   ```bash
+   ./scripts/setup.sh test    # 运行测试
+   ./scripts/setup.sh format  # 格式化代码
+   ./scripts/setup.sh lint    # 代码检查
+   ./scripts/setup.sh clean   # 清理缓存文件
+   ```
+
+   **Windows：**
+   ```batch
+   scripts\setup.bat test    # 运行测试
+   scripts\setup.bat format  # 格式化代码
+   scripts\setup.bat lint    # 代码检查
+   scripts\setup.bat clean   # 清理缓存文件
    ```
 
 ### 配置文件设置
@@ -83,19 +146,36 @@ LOG_LEVEL=INFO  # DEBUG | INFO | WARNING | ERROR | CRITICAL
 LOG_FILE=./logs/api-detector.log
 ```
 
+注意：使用Docker时，可以在`docker-compose.yml`文件中的`environment`部分设置环境变量，无需创建`.env`文件。
+
 ## 运行应用
 
-1. 确保环境已激活：
-   ```bash
-   conda activate api-detector
-   ```
+### 使用Docker
 
-2. 启动应用：
-   ```bash
-   python -m app.main
-   ```
+```bash
+docker-compose up -d
+```
 
-3. 在浏览器中访问：`http://localhost:8000`
+或使用管理脚本：
+```bash
+./scripts/docker-manage.sh start
+```
+
+### 使用Python虚拟环境
+
+使用设置脚本启动应用：
+
+**Linux/MacOS：**
+```bash
+./scripts/setup.sh run
+```
+
+**Windows：**
+```batch
+scripts\setup.bat run
+```
+
+在浏览器中访问：`http://localhost:8000`
 
 ## API使用指南
 

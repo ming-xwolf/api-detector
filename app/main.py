@@ -7,12 +7,6 @@ API检测器主入口模块
 import os
 import sys
 
-# 环境检查
-if os.environ.get('CONDA_DEFAULT_ENV') != 'api-detector':
-    print("错误: 请先激活api-detector环境")
-    print("运行: conda activate api-detector")
-    sys.exit(1)
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
