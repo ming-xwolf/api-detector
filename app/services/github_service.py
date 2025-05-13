@@ -30,7 +30,7 @@ async def get_repo_default_branch(owner: str, repo: str) -> str:
         默认分支名称
     """
     # 构建API URL
-    api_url = f"https://api.github.com/repos/{owner}/{repo}"
+    api_url = f"{settings.GITHUB_API_URL}/repos/{owner}/{repo}"
     logger.debug(f"获取仓库默认分支: {api_url}")
     
     try:
@@ -98,8 +98,9 @@ async def download_repository_zip(repo_url: str, branch: str = None) -> Path:
         shutil.rmtree(extract_dir)
     extract_dir.mkdir(parents=True, exist_ok=True)
     
-    # 构建下载URL
-    zip_url = f"https://github.com/{owner}/{repo_name}/archive/refs/heads/{branch}.zip"
+    # 构建下载URL，去除settings.GITHUB_BASE_URL最后的斜杠，因为路径中已包含斜杠
+    github_base = settings.GITHUB_BASE_URL.rstrip('/')
+    zip_url = f"{github_base}/{owner}/{repo_name}/archive/refs/heads/{branch}.zip"
     logger.info(f"正在下载仓库ZIP文件: {zip_url}")
     
     try:
@@ -221,8 +222,8 @@ async def get_repo_info(repo_url: str) -> dict:
         clean_url = repo_url.strip()
         
         # 移除URL前缀和后缀
-        if "github.com/" in clean_url:
-            path = clean_url.split("github.com/", 1)[1]
+        if settings.GITHUB_BASE_URL in clean_url:
+            path = clean_url.split(settings.GITHUB_BASE_URL, 1)[1]
         else:
             path = clean_url
             
@@ -235,7 +236,7 @@ async def get_repo_info(repo_url: str) -> dict:
         owner, repo = parts[:2]
         
         # 构建API URL
-        api_url = f"https://api.github.com/repos/{owner}/{repo}"
+        api_url = f"{settings.GITHUB_API_URL}/repos/{owner}/{repo}"
         logger.debug(f"GitHub API URL: {api_url}")
         
         # 创建一个新的httpx客户端，禁用标头验证
@@ -249,46 +250,45 @@ async def get_repo_info(repo_url: str) -> dict:
             # 如果设置了GitHub令牌，添加到请求头
             if settings.GITHUB_TOKEN:
                 headers["Authorization"] = f"token {settings.GITHUB_TOKEN}"
-            
+                
             # 发送请求
             response = await client.get(api_url, headers=headers)
+            response.raise_for_status()
             
-            if response.status_code != 200:
-                error_message = f"获取仓库信息失败: HTTP {response.status_code}"
-                try:
-                    error_data = response.json()
-                    if "message" in error_data:
-                        error_message = f"{error_message} - {error_data['message']}"
-                except:
-                    pass
-                logger.error(error_message)
-                raise ValueError(error_message)
-            
+            # 解析响应
             repo_info = response.json()
             
-            # 提取有用的仓库信息
-            return {
-                "name": repo_info.get("name"),
-                "full_name": repo_info.get("full_name"),
-                "description": repo_info.get("description"),
-                "language": repo_info.get("language"),
-                "default_branch": repo_info.get("default_branch"),
-                "created_at": repo_info.get("created_at"),
-                "updated_at": repo_info.get("updated_at"),
-                "size": repo_info.get("size"),
-                "stars": repo_info.get("stargazers_count"),
-                "forks": repo_info.get("forks_count"),
-                "watchers": repo_info.get("watchers_count"),
-                "open_issues": repo_info.get("open_issues_count"),
-                "license": repo_info.get("license", {}).get("name") if repo_info.get("license") else None,
-                "url": repo_info.get("html_url"),
+            # 提取感兴趣的信息
+            result = {
+                "name": repo_info.get("name", ""),
+                "full_name": repo_info.get("full_name", ""),
+                "description": repo_info.get("description", ""),
+                "default_branch": repo_info.get("default_branch", "main"),
+                "language": repo_info.get("language", ""),
+                "stars": repo_info.get("stargazers_count", 0),
+                "forks": repo_info.get("forks_count", 0),
+                "open_issues": repo_info.get("open_issues_count", 0),
+                "created_at": repo_info.get("created_at", ""),
+                "updated_at": repo_info.get("updated_at", ""),
+                "owner": {
+                    "login": repo_info.get("owner", {}).get("login", ""),
+                    "type": repo_info.get("owner", {}).get("type", "")
+                }
             }
+            
+            return result
+            
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code == 404:
+            logger.warning(f"仓库不存在: {repo_url}")
+            raise ValueError(f"仓库不存在")
+        else:
+            logger.error(f"获取仓库信息失败: {str(e)}")
+            raise ValueError(f"获取仓库信息失败: HTTP {e.response.status_code}")
     except UnicodeEncodeError as e:
+        # 处理编码错误
         logger.error(f"处理GitHub API请求时出现编码错误: {str(e)}")
         raise ValueError(f"处理GitHub API请求时出现编码错误，请确保URL不包含非ASCII字符")
-    except httpx.RequestError as e:
-        logger.error(f"GitHub API请求失败: {str(e)}")
-        raise ValueError(f"无法连接到GitHub API: {str(e)}")
     except Exception as e:
-        logger.error(f"获取仓库信息时出错: {str(e)}")
-        raise ValueError(f"获取仓库信息时出错: {str(e)}") 
+        logger.error(f"GitHub API请求失败: {str(e)}")
+        raise ValueError(f"无法连接到GitHub API: {str(e)}") 

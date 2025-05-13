@@ -28,6 +28,8 @@ class Settings(BaseSettings):
     RELOAD: bool = True  # 仅在开发环境使用
     
     # GitHub相关设置
+    GITHUB_BASE_URL: str = "https://github.com/"  # GitHub网站默认URL
+    GITHUB_API_URL: str = "https://api.github.com"  # GitHub API默认URL
     GITHUB_TOKEN: Optional[str] = None  # 如需更高API访问限制，请设置GitHub令牌
     
     # 存储设置
@@ -62,4 +64,4 @@ class Settings(BaseSettings):
 settings = Settings()
 
 # 在导入时设置目录
-settings.setup_directories() 
+settings.setup_directories()

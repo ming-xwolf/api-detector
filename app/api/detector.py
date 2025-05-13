@@ -11,6 +11,7 @@ from typing import Optional
 from app.models.api import AnalysisResult
 from app.services.detector_service import detector_service
 from app.services.file_service import cleanup_temp_files
+from app.core.config import settings
 from app.utils.logger import logger
 
 router = APIRouter(prefix="/api", tags=["detector"])
@@ -54,8 +55,8 @@ async def detect_from_github(repository: GitHubRepository, background_tasks: Bac
         repo_url_str = str(repository.repo_url)
         
         # 验证URL格式
-        if not repo_url_str.startswith("https://github.com/"):
-            raise ValueError("仅支持GitHub仓库URL (https://github.com/...)")
+        if not repo_url_str.startswith(settings.GITHUB_BASE_URL):
+            raise ValueError(f"仅支持GitHub仓库URL ({settings.GITHUB_BASE_URL}...)")
             
         logger.info(f"接收到GitHub仓库分析请求: {repo_url_str}, 分支: {repository.branch}")
         
