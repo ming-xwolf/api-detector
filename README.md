@@ -12,7 +12,7 @@
   - OpenAPI/Swagger规范
 - 多种代码库分析方式：
   - 上传ZIP文件分析
-  - 直接从GitHub仓库URL分析
+  - 直接从Git仓库URL分析（支持GitHub、GitLab、Bitbucket等）
 - 详细的API识别与分类
 - 自动生成API使用报告和统计信息
 - 异步处理大型代码库
@@ -128,8 +128,14 @@ PORT=8000
 WORKERS=4
 RELOAD=true  # 仅在开发环境使用
 
-# GitHub相关设置
-GITHUB_TOKEN=  # 如需更高API访问限制，请设置GitHub令牌
+# Git相关设置
+GITHUB_BASE_URL=https://github.com/  # GitHub网站默认URL
+GITHUB_API_URL=https://api.github.com  # GitHub API默认URL
+GITLAB_BASE_URL=https://gitlab.com/  # GitLab网站默认URL
+GITLAB_API_URL=https://gitlab.com/api/v4  # GitLab API默认URL
+BITBUCKET_BASE_URL=https://bitbucket.org/  # Bitbucket网站默认URL
+BITBUCKET_API_URL=https://api.bitbucket.org/2.0  # Bitbucket API默认URL
+GIT_TOKEN=  # Git服务令牌（用于认证私有仓库）
 
 # 存储设置
 UPLOAD_DIR=./data/uploads
@@ -206,9 +212,9 @@ scripts\setup.bat run
 }
 ```
 
-### 2. 从GitHub仓库检测API
+### 2. 从Git仓库检测API
 
-**端点**: `POST /api/detect/github`
+**端点**: `POST /api/detect/git`
 
 **请求**:
 ```json
@@ -219,6 +225,12 @@ scripts\setup.bat run
 ```
 
 **响应**: 与上传ZIP文件相同格式
+
+**支持的仓库类型**:
+- GitHub: `https://github.com/用户名/仓库名`
+- GitLab: `https://gitlab.com/用户名/仓库名`
+- Bitbucket: `https://bitbucket.org/用户名/仓库名`
+- 其他任意Git仓库: `https://your-git-server.com/path/to/repo.git`
 
 ### 3. 获取支持的API类型
 

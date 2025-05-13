@@ -1,6 +1,6 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: false
 ---
 # API检测核心逻辑
@@ -8,7 +8,7 @@ alwaysApply: false
 ## 检测流程
 
 1. **文件收集**
-   - 从ZIP文件或GitHub仓库收集所有源代码文件
+   - 从ZIP文件或Git仓库收集所有源代码文件
    - 按文件类型进行分类
 
 2. **预处理**

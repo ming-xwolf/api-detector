@@ -1,6 +1,6 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: false
 ---
 # API检测器项目结构
@@ -10,7 +10,7 @@ alwaysApply: false
 ## 主要功能
 
 - 支持通过上传ZIP文件进行API检测
-- 支持通过GitHub仓库URL进行API检测
+- 支持通过Git仓库URL进行API检测
 - 支持多种API类型：REST、WebSocket、gRPC、GraphQL和OpenAPI
 
 ## 目录结构

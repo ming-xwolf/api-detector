@@ -27,10 +27,14 @@ class Settings(BaseSettings):
     WORKERS: int = 4
     RELOAD: bool = True  # 仅在开发环境使用
     
-    # GitHub相关设置
+    # Git相关设置
     GITHUB_BASE_URL: str = "https://github.com/"  # GitHub网站默认URL
     GITHUB_API_URL: str = "https://api.github.com"  # GitHub API默认URL
-    GITHUB_TOKEN: Optional[str] = None  # 如需更高API访问限制，请设置GitHub令牌
+    GITLAB_BASE_URL: str = "https://gitlab.com/"  # GitLab网站默认URL
+    GITLAB_API_URL: str = "https://gitlab.com/api/v4"  # GitLab API默认URL
+    BITBUCKET_BASE_URL: str = "https://bitbucket.org/"  # Bitbucket网站默认URL
+    BITBUCKET_API_URL: str = "https://api.bitbucket.org/2.0"  # Bitbucket API默认URL
+    GIT_TOKEN: Optional[str] = None  # Git服务令牌（用于认证私有仓库）
     
     # 存储设置
     UPLOAD_DIR: str = "./data/uploads"
