@@ -53,7 +53,9 @@ class GitLabProvider(GitProvider):
         Returns:
             如果是GitLab URL则返回True，否则返回False
         """
-        return "gitlab.com" in repo_url.lower()
+        # 从设置中获取域名
+        gitlab_domain = urlparse(settings.GITLAB_BASE_URL).netloc
+        return gitlab_domain.lower() in repo_url.lower()
     
     async def get_default_branch(self) -> str:
         """

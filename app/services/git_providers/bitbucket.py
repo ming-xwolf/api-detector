@@ -49,7 +49,9 @@ class BitbucketProvider(GitProvider):
         Returns:
             如果是Bitbucket URL则返回True，否则返回False
         """
-        return "bitbucket.org" in repo_url.lower()
+        # 从设置中获取域名
+        bitbucket_domain = urlparse(settings.BITBUCKET_BASE_URL).netloc
+        return bitbucket_domain.lower() in repo_url.lower()
     
     async def get_default_branch(self) -> str:
         """

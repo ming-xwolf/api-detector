@@ -49,7 +49,9 @@ class GitHubProvider(GitProvider):
         Returns:
             如果是GitHub URL则返回True，否则返回False
         """
-        return "github.com" in repo_url.lower()
+        # 从设置中获取域名
+        github_domain = urlparse(settings.GITHUB_BASE_URL).netloc
+        return github_domain.lower() in repo_url.lower()
     
     async def get_default_branch(self) -> str:
         """
