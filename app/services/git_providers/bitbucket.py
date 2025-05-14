@@ -117,42 +117,20 @@ class BitbucketProvider(GitProvider):
         # 创建保存路径
         zip_file_path = Path(settings.TEMP_DIR) / f"bitbucket_{self._workspace}_{self._repo_name}_{branch}.zip"
         
-        # 确保目录存在
-        zip_file_path.parent.mkdir(parents=True, exist_ok=True)
-        
-        # 如果文件已存在，先删除
-        if zip_file_path.exists():
-            zip_file_path.unlink()
-            
         logger.info(f"正在下载Bitbucket仓库ZIP: {self._repo_url} (分支: {branch})")
         
         try:
             # 设置请求头
             headers = {}
             
-            # 下载ZIP文件
-            with httpx.Client(timeout=60.0, follow_redirects=True) as client:
-                with client.stream("GET", zip_url, headers=headers) as response:
-                    response.raise_for_status()
-                    
-                    # 写入文件
-                    with open(zip_file_path, "wb") as f:
-                        for chunk in response.iter_bytes(chunk_size=8192):
-                            f.write(chunk)
-                            
-            logger.info(f"Bitbucket仓库ZIP下载成功: {zip_file_path}")
-            return zip_file_path
-            
-        except httpx.HTTPStatusError as e:
-            if e.response.status_code == 404:
-                logger.warning(f"Bitbucket仓库或分支不存在: {self._workspace}/{self._repo_name}/{branch}")
+            # 使用基类的辅助方法下载ZIP文件
+            return await self.download_zip_from_url(zip_url, zip_file_path, headers)
+        except ValueError as e:
+            # 重新抛出异常，添加更多上下文信息
+            if "下载的文件不存在" in str(e):
                 raise ValueError(f"Bitbucket仓库或分支不存在: {self._workspace}/{self._repo_name}/{branch}")
             else:
-                logger.error(f"下载Bitbucket仓库ZIP失败: {str(e)}")
                 raise ValueError(f"下载Bitbucket仓库ZIP失败: {str(e)}")
-        except Exception as e:
-            logger.error(f"下载Bitbucket仓库ZIP时出错: {str(e)}")
-            raise ValueError(f"下载Bitbucket仓库ZIP时出错: {str(e)}")
     
     async def clone_repository(self, branch: Optional[str] = None) -> Path:
         """
