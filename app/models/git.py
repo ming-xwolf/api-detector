@@ -11,4 +11,4 @@ from pydantic import BaseModel, HttpUrl
 class GitRepository(BaseModel):
     """Git仓库请求模型"""
     repo_url: HttpUrl
-    branch: Optional[str] = "main"  # 可选参数，如果不提供则使用仓库默认分支 
+    branch: Optional[str] = None  # 可选参数，如果不提供则使用仓库默认分支 
