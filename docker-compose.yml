@@ -12,7 +12,7 @@ services:
     container_name: api-detector
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "18000:8000"
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
