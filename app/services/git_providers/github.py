@@ -133,7 +133,8 @@ class GitHubProvider(GitProvider):
             下载的ZIP文件路径
         """
         # 构建ZIP下载URL
-        zip_url = f"https://github.com/{self._owner}/{self._repo_name}/archive/refs/heads/{branch}.zip"
+        base_url = settings.GITHUB_BASE_URL.rstrip('/')
+        zip_url = f"{base_url}/{self._owner}/{self._repo_name}/archive/refs/heads/{branch}.zip"
         
         # 创建保存路径
         zip_file_path = Path(settings.TEMP_DIR) / f"github_{self._owner}_{self._repo_name}_{branch}.zip"

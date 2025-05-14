@@ -137,7 +137,8 @@ class BitbucketProvider(GitProvider):
             下载的ZIP文件路径
         """
         # 构建ZIP下载URL
-        zip_url = f"https://bitbucket.org/{self._workspace}/{self._repo_name}/get/{branch}.zip"
+        base_url = settings.BITBUCKET_BASE_URL.rstrip('/')
+        zip_url = f"{base_url}/{self._workspace}/{self._repo_name}/get/{branch}.zip"
         
         # 创建保存路径
         zip_file_path = Path(settings.TEMP_DIR) / f"bitbucket_{self._workspace}_{self._repo_name}_{branch}.zip"
