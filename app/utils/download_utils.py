@@ -20,8 +20,7 @@ class DownloadUtils:
     @staticmethod
     async def download_zip_from_url(
         zip_url: str, 
-        output_path: Path,
-        headers: Optional[Dict[str, str]] = None
+        output_path: Path
     ) -> Path:
         """
         从URL下载ZIP文件
@@ -29,7 +28,6 @@ class DownloadUtils:
         Args:
             zip_url: ZIP文件的URL
             output_path: 保存ZIP文件的路径
-            headers: 可选的HTTP请求头
             
         Returns:
             下载的ZIP文件路径
@@ -47,14 +45,10 @@ class DownloadUtils:
         logger.info(f"正在下载ZIP文件: {zip_url}")
         
         try:
-            # 设置默认请求头
-            if headers is None:
-                headers = {}
-                
             # 下载ZIP文件
             timeout = httpx.Timeout(60.0)
             with httpx.Client(timeout=timeout, follow_redirects=True) as client:
-                with client.stream("GET", zip_url, headers=headers) as response:
+                with client.stream("GET", zip_url) as response:
                     response.raise_for_status()
                     
                     # 写入文件

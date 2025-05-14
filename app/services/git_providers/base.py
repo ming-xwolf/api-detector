@@ -6,7 +6,7 @@ Git提供商基类 - 定义Git仓库操作的接口
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 
 from app.utils.download_utils import DownloadUtils
 
@@ -38,6 +38,15 @@ class GitProvider(ABC):
         """
         pass
     
+    def get_default_branch_download(self) -> List[str]:
+        """
+        获取常见的默认分支列表
+        
+        Returns:
+            常见默认分支名称列表
+        """
+        return ["main", "master", "develop", "trunk", "default"]
+    
     @abstractmethod
     async def clone_repository(self, branch: Optional[str] = None) -> Path:
         """
@@ -64,19 +73,31 @@ class GitProvider(ABC):
         """
         pass
     
-    async def download_zip_from_url(self, zip_url: str, output_path: Path, headers: Optional[Dict[str, str]] = None) -> Path:
+    @abstractmethod
+    async def download_zip_from_branch(self, branch: str) -> Path:
+        """
+        根据指定分支构造ZIP URL并下载仓库ZIP文件
+        
+        Args:
+            branch: 分支名称
+            
+        Returns:
+            下载的ZIP文件路径
+        """
+        pass
+    
+    async def download_zip_from_url(self, zip_url: str, output_path: Path) -> Path:
         """
         从URL下载仓库的ZIP文件
         
         Args:
             zip_url: ZIP文件的URL
             output_path: 保存ZIP文件的路径
-            headers: 可选的HTTP请求头
             
         Returns:
             下载的ZIP文件路径
         """
-        return await DownloadUtils.download_zip_from_url(zip_url, output_path, headers)
+        return await DownloadUtils.download_zip_from_url(zip_url, output_path)
     
     @abstractmethod
     async def get_repo_info(self) -> Dict[str, Any]:

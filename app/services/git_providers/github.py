@@ -97,15 +97,41 @@ class GitHubProvider(GitProvider):
         下载仓库的ZIP文件
         
         Args:
-            branch: 分支名，如果为None则使用默认分支
+            branch: 分支名，如果为None则使用默认分支列表依次尝试
             
         Returns:
             下载的ZIP文件路径
         """
-        # 如果没有指定分支，获取默认分支
-        if branch is None:
-            branch = await self.get_default_branch()
+        # 如果指定了分支，直接下载该分支
+        if branch is not None:
+            return await self.download_zip_from_branch(branch)
             
+        # 如果没有指定分支，获取默认分支列表，依次尝试下载
+        default_branches = self.get_default_branch_download()
+        last_error = None
+        
+        for current_branch in default_branches:
+            try:
+                logger.info(f"尝试下载分支 {current_branch} 的ZIP文件")
+                return await self.download_zip_from_branch(current_branch)
+            except ValueError as e:
+                logger.warning(f"下载分支 {current_branch} 失败: {str(e)}")
+                last_error = e
+                continue
+                
+        # 如果所有分支都失败，抛出最后一个错误
+        raise ValueError(f"所有默认分支下载失败，最后错误: {str(last_error)}")
+    
+    async def download_zip_from_branch(self, branch: str) -> Path:
+        """
+        根据指定分支构造ZIP URL并下载仓库ZIP文件
+        
+        Args:
+            branch: 分支名称
+            
+        Returns:
+            下载的ZIP文件路径
+        """
         # 构建ZIP下载URL
         zip_url = f"https://github.com/{self._owner}/{self._repo_name}/archive/refs/heads/{branch}.zip"
         
